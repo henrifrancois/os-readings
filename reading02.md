@@ -9,7 +9,7 @@ Still to be discussed:
 _Context Switch_
 Changing from one thread to another, just like for processes, requires to CPU to make a context-switch
 
-| | Processes | Threads |
+| Processes | Threads 
 |:--:|:---|:----|
 |Saving state | PCB | TCB |
 | Address Space | Unique | Shared |
