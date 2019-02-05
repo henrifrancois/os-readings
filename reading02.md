@@ -68,7 +68,29 @@ int pthread_create(
 Awaiting the completion of a thread requires the use of the `pthread_join()` function.
 
 ```c
+#include <pthread.h>
 
+typedef struct __myarg_t {
+   int a;
+   int b;
+} myarg_t;
+
+void *mythread(void *arg) {
+   myarg_t *m = (myarg_t *) arg;
+   printf("%d %d\n", m->a, m->b);
+   return NULL;
+}
+
+int main(int argc, char *argv[]) {
+   pthread_t p;
+   int rc;
+
+   myarg_t args;
+   args.a = 10;
+   args.b = 20;
+   rc = pthread_create(&p, NULL, mythread, &args);
+   ...
+}
 ```
 
 ### Locks
@@ -158,22 +180,22 @@ Two variables can be used to signal whether a thread holds a lock or not, which 
 
 
 ### Compare-and-Swap Locks
-
+Keep track of the value of interest, and if the value on  read is equal to the expected value, then update the value. Otherwise, do nothing. 
 
 ### Load Links and Store Conditionals
-
+A traditional load instruction, coupled with a store instruction which only updates register information if there were no conflicting stores.
 
 ### Fetch-and-Add
-
+Increments register value while returning the old register value. This enables the creation of a ticket lock.
 
 ### Yield Locks
-
+System locks such as the three mentioned above are inefficient at times. Yielding simply means to give up the CPU, by moving the thread from the running state to the ready state. We can think of this as self-descheduling. 
 
 ### Queue-based approach
 
 
 ### Two-phased Locks
-
+Moves a waiting thread from the spinning phase to sleep if no lock is acquired promptly. 
 
 **Important Definitions**
 mutex: POSIX name for a lock since it provides _mutual exclusion_
