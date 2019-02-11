@@ -44,11 +44,8 @@ sem_t s;
 sem_init(&s, 0, 1);
 
 int main(){
-...
 sem_wait(&m);
-.
-.
-.
+...
 sem_post(&m)
 }
 ```
@@ -97,4 +94,97 @@ void Zem_post(Zem_t *s) {
  Mutex_unlock(&s->lock);
 }
 ```
+
+
 # Chapter 32: Concurrency Bugs
+
+## Non-Deadlock Bugs
+Although deadlock is one of the most infamous concurrency bugs, the majority of concurrency issues aren't deadlock related. Non-deadlock concurrency issues can be categorized as:
++ atomicity violation bugs
+  Atomicity violation bugs, as defined by Lu et al. occur when a code region is intended to be atomic but the atomicity is not enforced during execution.
+  For instance, this section of code:
+  ```c
+  1 Thread 1::
+  2 if (thd->proc_info) {
+  3 ...
+  4 fputs(thd->proc_info, ...);
+  5 ...
+  6 }
+  7
+  8 Thread 2::
+  9 thd->proc_info = NULL;
+  ```
+  has one thread setting a null value where another is avoiding one. With some unfortunate interruption timing, this is a hotbed for problems. This can be remediated by adding locks to the changing variable and to the vulnerable section calling `fputs`:
+  ```c
+  1 pthread_mutex_t proc_info_lock = PTHREAD_MUTEX_INITIALIZER;
+  2
+  3 Thread 1::
+  4 pthread_mutex_lock(&proc_info_lock);
+  5 if (thd->proc_info) {
+  6 ...
+  7 fputs(thd->proc_info, ...);
+  8 ...
+  9 }
+  10 pthread_mutex_unlock(&proc_info_lock);
+  11
+  12 Thread 2::
+  13 pthread_mutex_lock(&proc_info_lock);
+  14 thd->proc_info = NULL;
+  15 pthread_mutex_unlock(&proc_info_lock);
+  ```
++ order violation bugs
+  These types of bugs occur when the desired order between two different groups of memory accesses is flipped. This might mean that some sequence of events results in a state being reached or a function being called without the necessary prior steps having been completed. 
+  This can be mitigated by the use of condition variables, which as we've seen before, help in the correct handling of sequences of events involving multiple threads.
+  ```c
+  1 pthread_mutex_t mtLock = PTHREAD_MUTEX_INITIALIZER;
+  2 pthread_cond_t mtCond = PTHREAD_COND_INITIALIZER;
+  3 int mtInit = 0;
+  4
+  5 Thread 1::
+  6 void init() {
+  7 ...
+  8 mThread = PR_CreateThread(mMain, ...);
+  9
+  10 // signal that the thread has been created...
+  11 pthread_mutex_lock(&mtLock);
+  12 mtInit = 1;
+  13 pthread_cond_signal(&mtCond);
+  14 pthread_mutex_unlock(&mtLock);
+  15 ...
+  16 }
+  17
+  18 Thread 2::
+  19 void mMain(...) {
+  20 ...
+  21 // wait for the thread to be initialized...
+  22 pthread_mutex_lock(&mtLock);
+  23 while (mtInit == 0)
+  24 pthread_cond_wait(&mtCond, &mtLock);
+  25 pthread_mutex_unlock(&mtLock);
+  26
+  27 mState = mThread->State;
+  28 ...
+  29 }
+  ```
+  
+## Deadlock bugs
+Four key conditions must be met in order for a deadlock to occur:
+1. **Mutual Exclusion** must be in use: a thread needs exclusive access to a resource it requires
+2. **Hold-and-Wait**: threads must be awaiting a free lock while simultaneously holding another lock.
+3. **No Preemption**: resources cannot be forcibly removed from threads that are holding them.
+4. **Circular wait**: there exists multiple threads where each threads hold a lock which another thread is waiting to be freed, in a such a manner that threads are waiting for resources in a circular way.
+
+### Prevention
+Locking schemes can be written to avoid circular wait situations. One way of achieving this is by consistently acquire a certain lock before another. This is known as **total lock ordering**. In more complex systems where detailed orderings for locks is hard to achieve, a **partial ordering** is a more feasible way of ordering certain groups of types of locks instead of individual ones.
+
+### No Preemption
+Trying to grab a lock and in case of failure, find something else to do and try later. Don't stay idle while waiting for a lock to be freed. 
+
+### Mutual Exclusion
+If certain operations can be achieved atomically, the use of muteces is unnecessary and we can prevent deadlocks.
+
+### Deadlock Avoidance via Scheduling
+A scheduler could use knowledge of the different threads' behaviors to avoid deadlocks. For instance, if threads A and B are prone to deadlock since they acquire the same locks, the scheduler could make sure that A & B are never 'running' in such a way that a deadlock could occur.
+
+### Detect and Recover
+If deadlocks are very rare, just let the few that do occur happen, and move on.
