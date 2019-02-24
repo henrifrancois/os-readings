@@ -29,6 +29,79 @@ By providing each process with a  virtual memory space, the process' stack and h
 
 # Chapter 14: Memory API
 
+> How to correctly and efficiently allocate and manage memory?
+
+### Types of Memory
+
+There are two main types of memory:
+1. **Stack or automatic memory**
+   The stack encompasses variables declared by the programmer, functions, etc.
+   Information living on the stack does not persist across different scopes.
+   Allocations and deallocations are implicitely managed by the compiler.
+2. **Heap or manual memory**
+   Memory allocations on the heap are explicitly handled by the programmer.
+   Information living on the heap persists across different scopes.
+   
+### `malloc()`
+The `malloc(size_t size)` call returns a pointer to newly allocated space (with size of size) on the heap on success or `NULL` on failure.
+
+Common malloc patterns:
+```c
+double *d = (double *) malloc(sizeof(double));
+```
+Allocating memory for a certain type, here double. Casting is not required, but is used for readability.
+
+```c
+int *x = malloc(10 * sizeof(int));
+printf("%d\n", sizeof(x));
+```
+The actual amount of memory allocated to x is not known at compile time with the use of sizeof.
+
+```c
+char * s = "some string";
+char * str2 = (char *) malloc(strlen(s) + 1);
+```
+When allocating memory for strings, it is necessary to make space for the string termination character (`\0`), hence the `strlen(s) + 1`.
+
+### `free()`
+The `free((void*) arg)` call removes allocated memory for the variable `arg` from the heap.
+Only free when `arg` has accomplished its mission and will no longer be in use.
+
+### Common memory errors
+
+#### Forgetting to allocate memory
+```c
+char *src = "hello";
+char *dst; // oops! unallocated
+strcpy(dst, src); // segfault and die
+```
+
+#### Insufficient allocations
+```c
+char *src = "hello";
+char *dst = (char *) malloc(strlen(src)); // too small!
+strcpy(dst, src); // work properly
+```
+
+#### Uninitialized allocated memory
+```c
+int *p = (int *)malloc(sizeof(int));
+...
+func(p, ...); // uninitialized read
+```
+
+#### Not freeing allocating memory
+Memory leak: allocated memory is never freed. Memory leaks lead to insufficient space in the head for the rest of the program. 
+
+#### Freeing memory which will be referenced
+Dangling pointer: memory has been freed but should be used again. 
+
+#### Freeing the same memory multiple times
+Double free: freeing the same portion twice. 
+
+#### Incorrect call to free
+Freeing something that was not malloc()ed. 
+
 # Chapter 15: Address Translation
 
 # Chapter 16: Segmentation
