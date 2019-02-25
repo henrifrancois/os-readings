@@ -123,6 +123,9 @@ THe bounds register defines the limits of the address space. If an invalid addre
 
 ## Operating System Issues
 The Operatings System holds responsibility for a correct address translation. At the time of the creation of a process, the OS must find space for it in memory. It parses a **free list** to find room for new address space, and then mark it used. 
+In addition, when a process is terminated or exits gracefully, the OS must place it's memory on the free list, and clean up any associated data structures spawned by the program.
+Because the base and bounds registers' values are process-defined, a context switch implies new values for both registers. Therefore, during a context switch, the OS must also save both registers to the PCB, and restores them when the process is scheduled to run again.
+Finally, the OS must provide exception handlers, for a plethora of possible unallowed behaviors, such as attempts to access memory which does not belong to the offending process, or running illegal instructions. 
 
 # Chapter 16: Segmentation
 
