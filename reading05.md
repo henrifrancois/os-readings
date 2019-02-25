@@ -104,4 +104,39 @@ Freeing something that was not malloc()ed.
 
 # Chapter 15: Address Translation
 
+> How to efficiently and flexibly virtualize memory?
+
+Every memory reference in code goes through a hardware-based address translation, which enables the virtual memory reference to map to a physical memory address, where the data actually lives. 
+In hardware-based address translation, the OS manages memory, keeping track of free locations and locations which are in use to provide the low-level mechanisms for the hardware to perform the translation.
+
+## Assumptions
+1. User's address space is placed contiguously in physical memory
+2. The size of the address space is smaller than that of the physical memory
+3. All address spaces are the same size
+
+## Dynamic Relocation (Base and bounds)
+Each CPU harbors a base register and a bounds (or limits) register.
+The CPU uses the value of the base register to define the starting point for the process' virtual address space. For instance, if the CPU loads a process at address 32k, then it has to set the base register to that value. 
+Each virtual address referenced by the running process is determined by this formula:
+`physAdrr = virtualAddr + Base`
+THe bounds register defines the limits of the address space. If an invalid address (value > bounds) is presented to the CPU for translation, the CPU raises a runtime exception and kills the offending process.
+
+## Operating System Issues
+The Operatings System holds responsibility for a correct address translation. At the time of the creation of a process, the OS must find space for it in memory. It parses a **free list** to find room for new address space, and then mark it used. 
+
 # Chapter 16: Segmentation
+
+> How to support a large address space, given the limits of the base and bounds approach?
+
+## Segmentation: Generalized base and bounds
+
+## Segment References
+
+## Stack
+
+## Support for Sharing
+
+## Fine-grained vs Coarse-grained Segmentation
+
+## OS Support
+
