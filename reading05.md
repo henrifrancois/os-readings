@@ -132,14 +132,20 @@ Finally, the OS must provide exception handlers, for a plethora of possible unal
 > How to support a large address space, given the limits of the base and bounds approach?
 
 ## Segmentation: Generalized base and bounds
+Programs with large address spaces would be quite problematic in our initial model, since they would be engulfing a significant portion of memory each time they would be running.
+**Segmentation** is the idea that the different portions of memory in a program (code, stack, heap), can be logically separated within the address space. Additionally, segmentation implies that the initial memory segments loaded into the address space are not exactly contiguous: space is left for each of these different segments to grow individually. Each segment is defined by a base and bounds registers. The address translation for each segment is done the same as before. When an out-of-bounds address is referred to, a **segmentation fault** occurs.
 
 ## Segment References
+Segment bounds can be explicitly defined, where the bounds register is assigned a value by default, or implicitly defined bounds, where the hardware determines the bounds based on how the address was formed.
 
 ## Stack
+Since the stack grows upwards instead of downwards, the MMU needs information on the direction of growth of a segment. Then the address translation is done based on the direction of growth of the segment. 
 
 ## Support for Sharing
+Code sharing is a thing, but _protection bits_ are needed to make it happen. Protection bits indicate the permissions (read, write, execute) by a program on a specific segment. 
 
 ## Fine-grained vs Coarse-grained Segmentation
+We've covered coarse-grained segmentation, but fine-grained segmentation is more flexible in terms of memory address spaces, but require additional hadware support, such as a segment table 
 
 ## OS Support
-
+External fragmentation describes the state of memory containing a number of small ranges of free space but lacking adequate continuous free space range to accomodate new segments. While it is possible to rearrange the available space to accomodate the incoming segment, it is an expensive operation. Free list management algorithms may help keep large extents of memory available for allocation. As this is a hard problem, there isn't really an optimal solution ¯\_(ツ)_/¯
