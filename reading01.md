@@ -114,13 +114,17 @@ Treating each chunk of a job performing I/O operations as an independent job, th
 gaps between I/O operations (when the CPU is not being used) to schedule other jobs
 
 **Important Definitons**
-workload: collective assumptions about the processes 
-	running in the system
+workload: collective assumptions about the processes running in the system
+
 turnaround time: job completion time - job arrival time
+
 response time: job scheduling time - job arrival time
+
 fairness: the propensity for a scheduler to schedule all jobs
+
 amortization: reduction of cost of an operation by reducing
 	the frequency of that operation
+
 overlap: 
 
 ## Chapter 8: Multi-Level Feedback Queue (MLFQ)
