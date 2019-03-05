@@ -31,7 +31,7 @@ Threads do not necessarily run in the order of their creation. Just like process
 
 > Thread: independent sequence of executions running in a shared address space.
 
-> Parallelism:
+> Parallelism: 
 
 > Concurrency:
 
@@ -46,7 +46,7 @@ Threads do not necessarily run in the order of their creation. Just like process
 mutual exclusion: Guarantee that multiple threads will never access a critical section concurrently. 
 
 
-> ## Chapter 27: Thread API
+## Chapter 27: Thread API
 
 ### Thread Creation
 
