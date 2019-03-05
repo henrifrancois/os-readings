@@ -43,7 +43,7 @@ Threads do not necessarily run in the order of their creation. Just like process
 
 > synchronization primitives: tools (instructions) used to ensure deterministic outcomes when dealing with critical sections being accessed by multiple threads.
 
-mutual exclusion: Guarantee that multiple threads will never access a critical section concurrently. 
+> mutual exclusion: Guarantee that multiple threads will never access a critical section concurrently. 
 
 
 ## Chapter 27: Thread API
