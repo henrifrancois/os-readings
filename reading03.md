@@ -3,7 +3,7 @@
 ## Definition and Routines
 At times, it is necessary to plan execution of some code in a thread based on a condition being true in another thread. While it is possible and even easy to simply halt a thread form proceeding until a condition in another thread becomes true, it wastes CPU cycles and is inefficient. _There must be a better way!_
 
-A **condition variable** is used in place of a spind-and-wait approach to conditional execution within the context of multithreaded work.
+A **condition variable** is used in place of a spin-and-wait approach to conditional execution within the context of multithreaded work.
 
 The condition variable itself is a queue which threads can put themselves in to wait for a change in a predefined condition. The thread in which the condition is set to change may then wake up one or more thread(s) which were awaiting for a change of state in the condition variable. This is done by the concerned thread sending a 'wake up' signal to the other thread(s).
 
