@@ -19,15 +19,7 @@ The OS actually keeps a small portion of memory free, as it is advantageous to d
 high and low watermark determine thresholds for replacement operations. The monitoring and subsequent actions stemming from the state of the LW rests upon the swap daemon, a separate thread dedicated to what its name clearly implies. 
 This can be done for a number of pages at once, which is somewhat more efficient. 
 
-_**Important definitions**_
 
-swapping policy:
-
-present bit:
-
-page fault:
-
-page fault handler:
 
 
 ## Swapping Policies
@@ -48,6 +40,13 @@ Self explanatory
 **LRU (least recently used)**
 Recency of access is used to determine which page to kick out, exploiting locality. Thus a page is most likely to be kicked out when it hasn't been accessed in a long period of time. 
 
-_**Important definitions**_
+**Performance and workloads**
+LRU performs much better with workloads exhibiting high locality, while for workloads exhibiting little to no locality, it performs similarly to other policies, or better. 
 
-scan resistance:
+**Implementation concerns**
+Tracking page accesses is cumbersome, but it can be made easier with hardware support, which demonstrates how difficult implementing LRU perfectly is. (Millions of pages would imply a really, really large data structure)
+We can avoid some of the complexities of perfect implementation through some approximation. With hardware support, we can assign a use bit which can't be cleared by hw for each page, then for each replacement situation the use bit indicates if a page is a candidate for replacement. If it isn't the OS clears the bit and keeps going until it finds the next clear bit, and replaces the corresponding page. This is the clock algorithm. 
+The clock algorithm can be improved to take into consideration pages that have been modified to consider modified pages. With hardware we can define a dirty bit which tracks whether a page has been modified (writing modified pages to disk is expensive, while there is no cost for unmodified pages). Then priority for replacement can be given to unused and clean pages, then used and clean pages, then used and dirty pages, etc. 
+
+
+Constant paging is defined as thrashing, which results in abysmal performance. Admission control, which only allocates runtime to processes the OS knows it can handle well, is a remedy to thrashing. Another approach is to just kill processes that use too much memory
