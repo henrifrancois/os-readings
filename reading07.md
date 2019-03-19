@@ -31,6 +31,22 @@ page fault handler:
 
 
 ## Swapping Policies
+Main memory can be thought of as a cache for virtual memory. 
+We can create replacement policies which aim to minimize cache misses, since even small miss rates result in significant growth of the AMAT. 
+
+The optimal page replacement policy being _furthest in the future_, where the page kicked out is the one which will be used the furthest in the future. This isn't necessary the best choice in real systems as the future is hard to determine.
+
+Several paging policies can be used:
+
+**FIFO**
+Simple fifo replacement policies remove the page placed at the end of a queue, which was the first page to enter the queue.
+Poort hit rate.
+
+**Random replacement**
+Self explanatory
+
+**LRU (least recently used)**
+Recency of access is used to determine which page to kick out, exploiting locality. Thus a page is most likely to be kicked out when it hasn't been accessed in a long period of time. 
 
 _**Important definitions**_
 
