@@ -30,24 +30,33 @@ There are two primary ways of interaction between devices.
     This method makes devices registers available as if they were memory locations.
 
 ## Fitting into the OS: The device driver
-
-
-## A simple IDE Disk Server
-
-
-## Historical Notes
-
+A device driver is an abstraction which enables a device to interface with the OS.
 
 
 # Hard Disk Drives
 
 ## The interface
+A disk drive is made of n sectors numbered from 0 to n - 1, where that range defines the address space of the drive. Multi-sector operations are possible; indeed, many file systems will read or write 4KB at a time (or more). However, when updating the disk, the only guarantee drive manufacturers make is that a single 512-byte write is atomic.
 
 ## Basic Geometry
+The disk is made up of:
+* The platter       : circular hard surface on which data is stored persistently by magnetic charge induction.
+* The surface       : each side of a platter
+* The spindle       : thing that binds the platters
+* The track         : concentric data circle
+* The disk head     : thing that writes on the track
+* The disk arm      : thing that drives the disk head
 
 ## A simple disk drive
+Rotational delay
+
+Multiple tracks: seek time
+
+Some other details
+
 
 ## I/O Time
+
 
 ## Disk Scheduling
 
