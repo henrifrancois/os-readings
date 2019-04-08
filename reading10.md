@@ -17,7 +17,7 @@ To handle disk faults, RAIDs  must be aware of certain faults. We can describe t
 RAIDs can be evaluated on the basis of capacity, reliability and performance. 
 
 ## RAID-0: Striping
-Striping consists in spreading the blocks across disks in a R
+Striping consists in spreading the blocks across disks in a Round Robin fashion. This is done to maximize parallelization and is leveraging spatial locality. The chunk size determines 
 
 ## RAID-1: Mirroring
 
@@ -25,4 +25,5 @@ Striping consists in spreading the blocks across disks in a R
 
 ## RAID-5: Rotating Parity
 
-## 
+
+# Files and Directories
