@@ -53,3 +53,18 @@ Single request latency: R or S for reads, 2 * R or 2 * S for writes
 Total bandwidth for small writes: (N * R) / 4
 
 # Files and Directories
+Persistent storage devices store data quasi-permanently. The file system, comprised of files and directories is an abstraction persistent-storage devices. 
+A file is a linear array of bytes, referenced by a number designated as an inode number (its low-level name). Files are just abstractions to get and store data persistently on disk without underlying format considerations by the OS.
+A directory a file which contains a list of pairs. Directories are placed within other directories to form a directory hierarchy.
+
+Files can be created through the [open()!](https://linux.die.net/man/2/open) system call. Open returns a **file descriptor**, an integer value used to read files in the UNIX systems. It is a capability to perform certain operations. 
+Each process by default opens three files: stderr, stdin, stdout which explains subsequent calls to open() must return > 3.
+The read() and write() system calls are used to do what they clearly indicate they do.
+Sequential reads and writes are achieved through those calls, while the lseek() system call permits to read/write at a specific offset within a file. 
+
+Shared file table entries: a process is considered as a single entry in the file table of multiple processes, which consider it shared. This happens in the case of fork()...
+
+removing files via unlink: we can create a new reference for a file through link(). unlink() is used to remove those references before removing that file.
+
+
+**(ALL OMITTED INFORMATION WAS COVERED IN SYSTEMS PROGRAMMING)**
