@@ -50,6 +50,6 @@ Similar to RAID-4 but parity blocks are rotated across drives.
 Useful capacity : Same as RAID-4
 Sequential read latency: Same as RAID-4
 Single request latency: R or S for reads, 2 * R or 2 * S for writes
-
+Total bandwidth for small writes: (N * R) / 4
 
 # Files and Directories
