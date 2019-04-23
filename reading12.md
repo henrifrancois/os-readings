@@ -11,6 +11,10 @@ By making file system operations "disk-aware", there are significant performance
 1. Cylinder groups: files are placed in 'cylinders' within the same group to minimize seek times.
 Items related to each other are placed in the same regions on disk.
 
+This internal fragmentation could thus lead to roughly half the disk being wasted for a typical file system.
+Sub-blocks are used to solve this problem: 512-byte blocks that the file system could allocate to files.
+
+
 ## FSCK and Journaling
 What should happen once the power runs out, either due to a system crash or a shutdown?
 
